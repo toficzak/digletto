@@ -1,5 +1,12 @@
-package com.github.toficzak.digletto.core;
+package com.github.toficzak.digletto.web;
 
+import com.github.toficzak.digletto.core.ServiceIdeaCreate;
+import com.github.toficzak.digletto.core.ServiceIdeaDelete;
+import com.github.toficzak.digletto.core.ServiceIdeaView;
+import com.github.toficzak.digletto.core.dto.CreateIdea;
+import com.github.toficzak.digletto.core.dto.DeleteIdea;
+import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.web.view.ViewIdea;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +24,21 @@ public class ResourceIdea {
 
     @GetMapping
     public ViewIdea get() {
-        return serviceIdeaView.get();
+        Idea idea = serviceIdeaView.get();
+        return new ViewIdea(idea);
     }
 
     @PostMapping
-    public ResponseEntity<ViewIdea> create(@RequestBody CreateViewDto dto) {
-        ViewIdea view = serviceIdeaCreate.create(dto);
+    public ResponseEntity<ViewIdea> create(@RequestBody CreateIdea dto) {
+        Idea idea = serviceIdeaCreate.create(dto);
+        ViewIdea view = new ViewIdea(idea);
         URI uri = URI.create("/ideas/" + view.id().toString());
         return ResponseEntity.created(uri).body(view);
     }
 
     @DeleteMapping("/{ideaId}")
     public ResponseEntity<Void> delete(@PathVariable("ideaId") Long ideaId) {
-        DtoDeleteIdea dto = new DtoDeleteIdea(ideaId);
+        DeleteIdea dto = new DeleteIdea(ideaId);
         serviceIdeaDelete.delete(dto);
         return ResponseEntity.ok().build();
     }

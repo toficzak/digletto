@@ -1,6 +1,6 @@
 package com.github.toficzak.digletto.config;
 
-import com.github.toficzak.digletto.core.IdeaNotFoundException;
+import com.github.toficzak.digletto.core.exception.IdeaNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(IdeaNotFoundException.class)
     public ResponseEntity<Object> handleIdeaNotFound(IdeaNotFoundException exception, WebRequest request) {
-        Error error = new Error(exception.errorCode);
+        Error error = new Error(ErrorCodes.IDEA_NOT_FOUND);
         return handleExceptionInternal(exception, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 

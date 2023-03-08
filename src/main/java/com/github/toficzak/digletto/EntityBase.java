@@ -1,4 +1,4 @@
-package com.github.toficzak.digletto.core;
+package com.github.toficzak.digletto;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @MappedSuperclass
-abstract class EntityBase {
+public abstract class EntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,8 @@
 package com.github.toficzak.digletto.core;
 
+import com.github.toficzak.digletto.EntityBase;
+import com.github.toficzak.digletto.core.dto.CreateIdea;
+import com.github.toficzak.digletto.core.dto.Idea;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,7 +25,7 @@ class EntityIdea extends EntityBase {
     @Enumerated(EnumType.STRING)
     private StatusIdea status;
 
-    static EntityIdea fromDto(CreateViewDto dto) {
+    static EntityIdea from(CreateIdea dto) {
         return EntityIdea.builder()
                 .name(dto.name())
                 .ownerId(dto.userId())
@@ -30,10 +33,8 @@ class EntityIdea extends EntityBase {
                 .build();
     }
 
-    // TODO: should entity change to view/dto? Or Dto should have ability to be produced from entity?
-    //  In latter case, view can be separated from core and view depends on core - this sounds more right.
-    ViewIdea toView() {
-        return new ViewIdea(super.id, super.created, this.name, this.ownerId, this.status);
+    Idea toDto() {
+        return new Idea(super.id, super.created, this.name, this.ownerId, this.status);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.toficzak.digletto.core;
 
+import com.github.toficzak.digletto.core.dto.Idea;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,8 +10,8 @@ public class ServiceIdeaView {
 
     private final RepoIdea repoIdea;
 
-    public ViewIdea get() {
-        return repoIdea.findAll().get(0).toView();
+    public Idea get() {
+        return repoIdea.findAll().get(0).toDto();
     }
 
 

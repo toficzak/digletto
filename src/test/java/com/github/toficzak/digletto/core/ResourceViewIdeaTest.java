@@ -2,14 +2,14 @@ package com.github.toficzak.digletto.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.toficzak.digletto.config.ErrorCodes;
+import com.github.toficzak.digletto.core.dto.CreateIdea;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.time.OffsetDateTime;
 
@@ -47,7 +47,7 @@ public class ResourceViewIdeaTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.name", is(IDEA_NAME)))
-                    .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.created, 1)))
+                    .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.toDto().created(), 1)))
                     .andExpect(jsonPath("$.ownerId", is(3)))
                     .andExpect(jsonPath("$.status", is(StatusIdea.DRAFT.toString())));
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class ResourceViewIdeaTest {
     @Test
     public void create_shouldSucceedCreatingIdea() {
 
-        CreateViewDto dto = new CreateViewDto(IDEA_NAME, IDEA_USER_ID);
+        CreateIdea dto = new CreateIdea(IDEA_NAME, IDEA_USER_ID);
 
         String jsonContent = parseJsonToString(dto);
 
@@ -89,7 +89,7 @@ public class ResourceViewIdeaTest {
 
         try {
             mockMvc
-                    .perform(delete("/ideas" + "/" + idea.id))
+                    .perform(delete("/ideas" + "/" + idea.toDto().id()))
                     .andDo(print())
                     .andExpect(status().isOk());
         } catch (Exception e) {
@@ -123,22 +123,12 @@ public class ResourceViewIdeaTest {
         return idea;
     }
 
-    private String parseJsonToString(CreateViewDto dto) {
+    private String parseJsonToString(CreateIdea dto) {
         try {
             return objectMapper.writeValueAsString(dto);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    private ResultActions performHttpCallSafely(MockMvc mockMvc, MockHttpServletRequestBuilder request) {
-        try {
-            return mockMvc.perform(request);
-        } catch (Exception e) {
-            fail(e);
-        }
-        return null;
     }
 
 }
