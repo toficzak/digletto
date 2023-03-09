@@ -58,12 +58,12 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.content").isArray())
                     .andExpect(jsonPath("$.content", hasSize(2)))
                     .andExpect(jsonPath("$.content[0].id").value(idea.id()))
-                    .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 5)))
+                    .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.content[0].name").value(idea.name()))
                     .andExpect(jsonPath("$.content[0].ownerId").value(idea.ownerId().intValue()))
                     .andExpect(jsonPath("$.content[0].status").value(idea.status().toString()))
                     .andExpect(jsonPath("$.content[1].id").value(otherIdea.id()))
-                    .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 5)))
+                    .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 1)))
                     .andExpect(jsonPath("$.content[1].name").value(otherIdea.name()))
                     .andExpect(jsonPath("$.content[1].ownerId").value(otherIdea.ownerId().intValue()))
                     .andExpect(jsonPath("$.content[1].status").value(otherIdea.status().toString()))
@@ -94,7 +94,7 @@ public class ResourceViewIdeaTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.name", is(OTHER_IDEA_NAME)))
-                    .andExpect(jsonPath("$.created").value(new ODTMatcher(now, 5)))
+                    .andExpect(jsonPath("$.created").value(new ODTMatcher(now, 1)))
                     .andExpect(jsonPath("$.ownerId", is(OTHER_IDEA_USER_ID.intValue())))
                     .andExpect(jsonPath("$.status", is(StatusIdea.DRAFT.toString())));
         } catch (Exception e) {
