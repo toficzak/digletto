@@ -70,7 +70,7 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.pageable.pageSize").value(20))
                     .andExpect(jsonPath("$.pageable.pageNumber").value(0))
                     .andExpect(jsonPath("$.totalPages").value(1))
-                    .andExpect(jsonPath("$.totalElements").value(1));
+                    .andExpect(jsonPath("$.totalElements").value(2));
         } catch (Exception e) {
             fail(e);
         }
