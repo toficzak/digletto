@@ -30,6 +30,13 @@ public class ResourceIdea {
         return ideas.map(ViewIdea::new);
     }
 
+    @GetMapping("/{ideaId}")
+    public ViewIdea get(@PathVariable("ideaId") Long ideaId) {
+        Idea idea = serviceIdeaView.get(ideaId);
+        return new ViewIdea(idea);
+    }
+
+
     @PostMapping
     public ResponseEntity<ViewIdea> create(@RequestBody CreateIdea dto) {
         Idea idea = serviceIdeaCreate.create(dto);

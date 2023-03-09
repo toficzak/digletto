@@ -44,6 +44,38 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
+    public void get_shouldGetIdea() {
+        helperEntityIdea.persistAnotherTestIdea();
+        helperEntityIdea.persistTestIdea();
+        Idea idea = helperEntityIdea.getLastPersisted();
+
+        try {
+            mockMvc
+                    .perform(get("/ideas/" + idea.id()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(idea.id()))
+                    .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.created(), 1)))
+                    .andExpect(jsonPath("$.name").value(idea.name()))
+                    .andExpect(jsonPath("$.ownerId").value(idea.ownerId().intValue()))
+                    .andExpect(jsonPath("$.status").value(idea.status().toString()));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
+    public void get_ideaNotFound_throwException() {
+        try {
+            mockMvc
+                    .perform(get("/ideas/" + 99))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("errorCode").value(ErrorCodes.IDEA_NOT_FOUND));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
     public void listing_shouldGetIdeas() {
         helperEntityIdea.persistAnotherTestIdea();
         helperEntityIdea.persistTestIdea();

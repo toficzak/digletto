@@ -1,6 +1,7 @@
 package com.github.toficzak.digletto.core;
 
 import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.core.exception.IdeaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,10 @@ public class ServiceIdeaView {
         return repoIdea.findAll(pageable).map(EntityIdea::toDto);
     }
 
+    public Idea get(Long id) {
+        return repoIdea.findById(id)
+                .orElseThrow(IdeaNotFoundException::new)
+                .toDto();
+    }
 
 }
