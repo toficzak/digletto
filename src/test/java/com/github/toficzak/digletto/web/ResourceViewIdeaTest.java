@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.toficzak.digletto.config.ErrorCodes;
 import com.github.toficzak.digletto.core.HelperEntityIdea;
+import com.github.toficzak.digletto.core.HelperEntityUser;
 import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.core.dto.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.OffsetDateTime;
 
 import static com.github.toficzak.digletto.core.HelperEntityIdea.OTHER_IDEA_NAME;
-import static com.github.toficzak.digletto.core.HelperEntityIdea.OTHER_IDEA_USER_ID;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -36,11 +37,14 @@ public class ResourceViewIdeaTest {
     @Autowired
     private HelperEntityIdea helperEntityIdea;
     @Autowired
+    private HelperEntityUser helperEntityUser;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void initialize() {
         helperEntityIdea.clearTable();
+        helperEntityUser.clearTable();
     }
 
     @Test
@@ -56,7 +60,10 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.id").value(idea.id()))
                     .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.name").value(idea.name()))
-                    .andExpect(jsonPath("$.ownerId").value(idea.ownerId().intValue()))
+                    .andExpect(jsonPath("$.owner.id").value(idea.owner().id().intValue()))
+                    .andExpect(jsonPath("$.owner.created").value(new ODTMatcher(idea.owner().created(), 1)))
+                    .andExpect(jsonPath("$.owner.email").value(idea.owner().email()))
+                    .andExpect(jsonPath("$.owner.name").value(idea.owner().name()))
                     .andExpect(jsonPath("$.status").value(idea.status().toString()));
         } catch (Exception e) {
             fail(e);
@@ -92,12 +99,18 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.content[0].id").value(idea.id()))
                     .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.content[0].name").value(idea.name()))
-                    .andExpect(jsonPath("$.content[0].ownerId").value(idea.ownerId().intValue()))
+                    .andExpect(jsonPath("$.content[0].owner.id").value(idea.owner().id().intValue()))
+                    .andExpect(jsonPath("$.content[0].owner.created").value(new ODTMatcher(idea.owner().created(), 1)))
+                    .andExpect(jsonPath("$.content[0].owner.email").value(idea.owner().email()))
+                    .andExpect(jsonPath("$.content[0].owner.name").value(idea.owner().name()))
                     .andExpect(jsonPath("$.content[0].status").value(idea.status().toString()))
                     .andExpect(jsonPath("$.content[1].id").value(otherIdea.id()))
                     .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 1)))
                     .andExpect(jsonPath("$.content[1].name").value(otherIdea.name()))
-                    .andExpect(jsonPath("$.content[1].ownerId").value(otherIdea.ownerId().intValue()))
+                    .andExpect(jsonPath("$.content[1].owner.id").value(otherIdea.owner().id().intValue()))
+                    .andExpect(jsonPath("$.content[1].owner.created").value(new ODTMatcher(otherIdea.owner().created(), 1)))
+                    .andExpect(jsonPath("$.content[1].owner.email").value(otherIdea.owner().email()))
+                    .andExpect(jsonPath("$.content[1].owner.name").value(otherIdea.owner().name()))
                     .andExpect(jsonPath("$.content[1].status").value(otherIdea.status().toString()))
                     .andExpect(jsonPath("$.pageable.pageSize").value(20))
                     .andExpect(jsonPath("$.pageable.pageNumber").value(0))
@@ -110,11 +123,10 @@ public class ResourceViewIdeaTest {
 
     @Test
     public void create_shouldSucceedCreatingIdea() {
-
-        CreateIdea dto = new CreateIdea(OTHER_IDEA_NAME, OTHER_IDEA_USER_ID);
-
+        helperEntityUser.persistTestUser();
+        User user = helperEntityUser.getLastPersisted();
+        CreateIdea dto = new CreateIdea(OTHER_IDEA_NAME, user.id());
         String jsonContent = parseJsonToString(dto);
-
         OffsetDateTime now = OffsetDateTime.now();
 
         try {
@@ -127,7 +139,10 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.name", is(OTHER_IDEA_NAME)))
                     .andExpect(jsonPath("$.created").value(new ODTMatcher(now, 1)))
-                    .andExpect(jsonPath("$.ownerId", is(OTHER_IDEA_USER_ID.intValue())))
+                    .andExpect(jsonPath("$.owner.id").value(user.id().intValue()))
+                    .andExpect(jsonPath("$.owner.created").value(new ODTMatcher(user.created(), 1)))
+                    .andExpect(jsonPath("$.owner.email").value(user.email()))
+                    .andExpect(jsonPath("$.owner.name").value(user.name()))
                     .andExpect(jsonPath("$.status", is(StatusIdea.DRAFT.toString())));
         } catch (Exception e) {
             fail(e);

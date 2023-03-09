@@ -14,17 +14,19 @@ public class HelperEntityIdea {
 
     public static final String IDEA_NAME = "Test Name";
     public static final String OTHER_IDEA_NAME = "Test Name";
-    public static final Long IDEA_USER_ID = 3L;
-    public static final Long OTHER_IDEA_USER_ID = 3L;
+    @Autowired
+    private final HelperEntityUser helperEntityUser;
     public Map<Integer, Idea> ideas = new Hashtable<>();
     public int counter = 0;
     @Autowired
     private RepoIdea repoIdea;
 
     public void persistTestIdea() {
+        EntityUser owner = helperEntityUser.persistTestUser();
+
         EntityIdea idea = EntityIdea.builder()
                 .name(IDEA_NAME)
-                .ownerId(IDEA_USER_ID)
+                .owner(owner)
                 .status(StatusIdea.DRAFT)
                 .build();
 
@@ -34,9 +36,10 @@ public class HelperEntityIdea {
     }
 
     public void persistAnotherTestIdea() {
+        EntityUser owner = helperEntityUser.persistTestUser();
         EntityIdea idea = EntityIdea.builder()
                 .name(OTHER_IDEA_NAME)
-                .ownerId(OTHER_IDEA_USER_ID)
+                .owner(owner)
                 .status(StatusIdea.CANCELLED)
                 .build();
 
