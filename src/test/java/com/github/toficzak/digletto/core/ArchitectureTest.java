@@ -10,18 +10,26 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 public class ArchitectureTest {
 
+    private static final String CORE_PACKAGE = "..core..";
+    private static final String WEB_PACKAGE = "..web..";
+    private static final String MAIN_PACKAGE = "com.github.toficzak.digletto";
+
+    private static final JavaClasses IMPORTED_CLASSED = new ClassFileImporter().importPackages(MAIN_PACKAGE);
+
     @Test
-    void Services_should_only_be_accessed_by_Controllers() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("com.github.toficzak.digletto");
+    void coreHasNoDependencies() {
+        ArchRule coreHasNoDependencies = noClasses().that().resideInAPackage(CORE_PACKAGE)
+                .should().dependOnClassesThat().resideInAPackage(WEB_PACKAGE);
 
+        coreHasNoDependencies.check(IMPORTED_CLASSED);
+    }
+
+    @Test
+    void coreCanBeAccessedByWeb() {
         ArchRule myRule = classes()
-                .that().resideInAPackage("..core..")
-                .should().onlyBeAccessed().byAnyPackage("..web..", "..core..");
+                .that().resideInAPackage(CORE_PACKAGE)
+                .should().onlyBeAccessed().byAnyPackage(WEB_PACKAGE, CORE_PACKAGE);
 
-        ArchRule coreHasNoDepenedencies = noClasses().that().resideInAPackage("..core..")
-                .should().dependOnClassesThat().resideInAPackage("..web..");
-
-        myRule.check(importedClasses);
-        coreHasNoDepenedencies.check(importedClasses);
+        myRule.check(IMPORTED_CLASSED);
     }
 }
