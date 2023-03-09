@@ -1,4 +1,4 @@
-package com.github.toficzak.digletto.core;
+package com.github.toficzak.digletto.web;
 
 import lombok.RequiredArgsConstructor;
 import org.hamcrest.BaseMatcher;

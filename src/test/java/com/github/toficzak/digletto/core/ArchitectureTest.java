@@ -6,6 +6,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 public class ArchitectureTest {
 
@@ -17,10 +18,10 @@ public class ArchitectureTest {
                 .that().resideInAPackage("..core..")
                 .should().onlyBeAccessed().byAnyPackage("..web..", "..core..");
 
-//        ArchRule another = classes()
-//                .that().resideInAPackage("..core..")
-//                        .should().depen
+        ArchRule coreHasNoDepenedencies = noClasses().that().resideInAPackage("..core..")
+                .should().dependOnClassesThat().resideInAPackage("..web..");
 
         myRule.check(importedClasses);
+        coreHasNoDepenedencies.check(importedClasses);
     }
 }

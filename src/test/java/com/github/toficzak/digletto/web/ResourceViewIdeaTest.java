@@ -1,18 +1,25 @@
-package com.github.toficzak.digletto.core;
+package com.github.toficzak.digletto.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.toficzak.digletto.config.ErrorCodes;
+import com.github.toficzak.digletto.core.HelperEntityIdea;
+import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
+import com.github.toficzak.digletto.core.dto.Idea;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.OffsetDateTime;
 
+import static com.github.toficzak.digletto.core.HelperEntityIdea.IDEA_NAME;
+import static com.github.toficzak.digletto.core.HelperEntityIdea.IDEA_USER_ID;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -24,21 +31,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ResourceViewIdeaTest {
 
-    public static final String IDEA_NAME = "Test Name";
-    private static final Long IDEA_USER_ID = 3L;
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
-    private RepoIdea repoIdea;
-
+    private HelperEntityIdea helperEntityIdea;
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     public void get_listing() {
 
-        EntityIdea idea = persistTestIdea();
+        helperEntityIdea.persistTestIdea();
+        Idea idea = helperEntityIdea.getLastPersisted();
 
         try {
             mockMvc
@@ -47,9 +51,9 @@ public class ResourceViewIdeaTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.name", is(IDEA_NAME)))
-                    .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.toDto().created(), 1)))
+                    .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.ownerId", is(3)))
-                    .andExpect(jsonPath("$.status", is(StatusIdea.DRAFT.toString())));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.status", Is.is(StatusIdea.DRAFT.toString())));
         } catch (Exception e) {
             fail(e);
         }
@@ -85,11 +89,11 @@ public class ResourceViewIdeaTest {
     @Test
     public void delete_shouldDeleteIdea() {
 
-        EntityIdea idea = persistTestIdea();
-
+        helperEntityIdea.persistTestIdea();
+        Idea idea = helperEntityIdea.getLastPersisted();
         try {
             mockMvc
-                    .perform(delete("/ideas" + "/" + idea.toDto().id()))
+                    .perform(delete("/ideas" + "/" + idea.id()))
                     .andDo(print())
                     .andExpect(status().isOk());
         } catch (Exception e) {
@@ -112,16 +116,6 @@ public class ResourceViewIdeaTest {
 
     }
 
-    private EntityIdea persistTestIdea() {
-        EntityIdea idea = EntityIdea.builder()
-                .name(IDEA_NAME)
-                .ownerId(IDEA_USER_ID)
-                .status(StatusIdea.DRAFT)
-                .build();
-
-        repoIdea.save(idea);
-        return idea;
-    }
 
     private String parseJsonToString(CreateIdea dto) {
         try {
