@@ -16,6 +16,8 @@ public class HelperEntityIdea {
     public static final String OTHER_IDEA_NAME = "Test Name";
     @Autowired
     private final HelperEntityUser helperEntityUser;
+    @Autowired
+    private final HelperEntityRating helperEntityRating;
     public Map<Integer, Idea> ideas = new Hashtable<>();
     public int counter = 0;
     @Autowired
@@ -34,6 +36,27 @@ public class HelperEntityIdea {
         Idea dto = idea.toDto();
         ideas.put(counter++, dto);
     }
+
+    public void persistTestIdeaWithRatings() {
+        EntityUser owner = helperEntityUser.persistTestUser();
+
+        EntityIdea idea = EntityIdea.builder()
+                .name(IDEA_NAME)
+                .owner(owner)
+                .status(StatusIdea.DRAFT)
+                .build();
+
+        EntityRating rating1 = helperEntityRating.persistTestRating(1, owner);
+        EntityRating rating2 = helperEntityRating.persistTestRating(2, owner);
+
+        idea.addRating(rating1);
+        idea.addRating(rating2);
+        repoIdea.saveAndFlush(idea);
+
+        Idea dto = idea.toDto();
+        ideas.put(counter++, dto);
+    }
+
 
     public void persistAnotherTestIdea() {
         EntityUser owner = helperEntityUser.persistTestUser();

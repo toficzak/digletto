@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.toficzak.digletto.config.ErrorCodes;
 import com.github.toficzak.digletto.core.HelperEntityIdea;
+import com.github.toficzak.digletto.core.HelperEntityRating;
 import com.github.toficzak.digletto.core.HelperEntityUser;
 import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
@@ -39,32 +40,36 @@ public class ResourceViewIdeaTest {
     @Autowired
     private HelperEntityUser helperEntityUser;
     @Autowired
+    private HelperEntityRating helperEntityRating;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void initialize() {
         helperEntityIdea.clearTable();
         helperEntityUser.clearTable();
+        helperEntityRating.clearTable();
     }
 
     @Test
     public void get_shouldGetIdea() {
-        helperEntityIdea.persistAnotherTestIdea();
-        helperEntityIdea.persistTestIdea();
+        helperEntityIdea.persistTestIdeaWithRatings();
         Idea idea = helperEntityIdea.getLastPersisted();
 
         try {
             mockMvc
                     .perform(get("/ideas/" + idea.id()))
                     .andExpect(status().isOk())
+                    .andDo(print())
                     .andExpect(jsonPath("$.id").value(idea.id()))
                     .andExpect(jsonPath("$.created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.name").value(idea.name()))
-                    .andExpect(jsonPath("$.owner.id").value(idea.owner().id().intValue()))
-                    .andExpect(jsonPath("$.owner.created").value(new ODTMatcher(idea.owner().created(), 1)))
                     .andExpect(jsonPath("$.owner.email").value(idea.owner().email()))
                     .andExpect(jsonPath("$.owner.name").value(idea.owner().name()))
-                    .andExpect(jsonPath("$.status").value(idea.status().toString()));
+                    .andExpect(jsonPath("$.status").value(idea.status().toString()))
+                    .andExpect(jsonPath("$.ratings").isArray())
+                    .andExpect(jsonPath("$.ratings[0].value").value(1))
+                    .andExpect(jsonPath("$.ratings[1].value").value(2));
         } catch (Exception e) {
             fail(e);
         }
@@ -99,16 +104,12 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.content[0].id").value(idea.id()))
                     .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.content[0].name").value(idea.name()))
-                    .andExpect(jsonPath("$.content[0].owner.id").value(idea.owner().id().intValue()))
-                    .andExpect(jsonPath("$.content[0].owner.created").value(new ODTMatcher(idea.owner().created(), 1)))
                     .andExpect(jsonPath("$.content[0].owner.email").value(idea.owner().email()))
                     .andExpect(jsonPath("$.content[0].owner.name").value(idea.owner().name()))
                     .andExpect(jsonPath("$.content[0].status").value(idea.status().toString()))
                     .andExpect(jsonPath("$.content[1].id").value(otherIdea.id()))
                     .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 1)))
                     .andExpect(jsonPath("$.content[1].name").value(otherIdea.name()))
-                    .andExpect(jsonPath("$.content[1].owner.id").value(otherIdea.owner().id().intValue()))
-                    .andExpect(jsonPath("$.content[1].owner.created").value(new ODTMatcher(otherIdea.owner().created(), 1)))
                     .andExpect(jsonPath("$.content[1].owner.email").value(otherIdea.owner().email()))
                     .andExpect(jsonPath("$.content[1].owner.name").value(otherIdea.owner().name()))
                     .andExpect(jsonPath("$.content[1].status").value(otherIdea.status().toString()))
@@ -139,8 +140,6 @@ public class ResourceViewIdeaTest {
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.name", is(OTHER_IDEA_NAME)))
                     .andExpect(jsonPath("$.created").value(new ODTMatcher(now, 1)))
-                    .andExpect(jsonPath("$.owner.id").value(user.id().intValue()))
-                    .andExpect(jsonPath("$.owner.created").value(new ODTMatcher(user.created(), 1)))
                     .andExpect(jsonPath("$.owner.email").value(user.email()))
                     .andExpect(jsonPath("$.owner.name").value(user.name()))
                     .andExpect(jsonPath("$.status", is(StatusIdea.DRAFT.toString())));

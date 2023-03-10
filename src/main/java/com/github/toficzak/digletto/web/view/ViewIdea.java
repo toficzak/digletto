@@ -4,10 +4,16 @@ import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
 
 import java.time.OffsetDateTime;
+import java.util.Comparator;
+import java.util.List;
 
-public record ViewIdea(Long id, OffsetDateTime created, String name, ViewUser owner, StatusIdea status) {
+public record ViewIdea(Long id, OffsetDateTime created, String name, ViewUser owner, StatusIdea status,
+                       List<ViewRating> ratings) {
 
     public ViewIdea(Idea idea) {
-        this(idea.id(), idea.created(), idea.name(), new ViewUser(idea.owner()), idea.status());
+        this(idea.id(), idea.created(), idea.name(), new ViewUser(idea.owner()), idea.status(), idea.ratings().stream()
+                .map(ViewRating::new)
+                .sorted(Comparator.comparingInt(ViewRating::value))
+                .toList());
     }
 }

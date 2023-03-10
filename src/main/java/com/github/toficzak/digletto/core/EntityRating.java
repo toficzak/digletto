@@ -1,8 +1,10 @@
 package com.github.toficzak.digletto.core;
 
 import com.github.toficzak.digletto.EntityBase;
+import com.github.toficzak.digletto.core.dto.Rating;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -14,16 +16,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EntityRating extends EntityBase {
+class EntityRating extends EntityBase {
 
     @NotNull
     @Min(0)
     @Max(10)
-    private Integer value;
+    private Integer score;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private EntityUser user;
 
-    @OneToOne
-    private EntityIdea idea;
+    public Rating toDto() {
+        return new Rating(this.id, this.created, this.score);
+    }
 }
