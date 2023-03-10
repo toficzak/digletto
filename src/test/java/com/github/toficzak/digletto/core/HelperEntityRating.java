@@ -28,7 +28,8 @@ public class HelperEntityRating {
         return rating;
     }
 
-    public void clearTable() {
+    public void reinitialize() {
         repoRating.deleteAll();
+        this.ratings.clear();
     }
 }

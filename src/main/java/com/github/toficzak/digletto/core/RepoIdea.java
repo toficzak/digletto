@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface RepoIdea extends JpaRepository<EntityIdea, Long> {
+
+    boolean existsByNameAndOwner(String name, EntityUser owner);
 }

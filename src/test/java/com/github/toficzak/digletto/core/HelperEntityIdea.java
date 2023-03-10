@@ -26,7 +26,15 @@ public class HelperEntityIdea {
 
     public void persistTestIdea() {
         EntityUser owner = helperEntityUser.persistTestUser();
+        this.persistTestIdea(owner);
+    }
 
+    public void persistTestIdea(Long ownerId) {
+        EntityUser owner = helperEntityUser.getById(ownerId);
+        this.persistTestIdea(owner);
+    }
+
+    public void persistTestIdea(EntityUser owner) {
         EntityIdea idea = EntityIdea.builder()
                 .name(IDEA_NAME)
                 .owner(owner)
@@ -80,7 +88,8 @@ public class HelperEntityIdea {
         return ideas.get(index);
     }
 
-    public void clearTable() {
+    public void reinitialize() {
         repoIdea.deleteAll();
+        this.ideas.clear();
     }
 }

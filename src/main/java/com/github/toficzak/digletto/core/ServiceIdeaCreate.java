@@ -2,7 +2,8 @@ package com.github.toficzak.digletto.core;
 
 import com.github.toficzak.digletto.core.dto.CreateIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
-import com.github.toficzak.digletto.core.exception.UserNotFoundException;
+import com.github.toficzak.digletto.core.exception.IdeaNameAlreadyExistsForUserException;
+import com.github.toficzak.digletto.core.exception.IdeaNotPersistedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,16 +12,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class ServiceIdeaCreate {
-    // TODO: think about those names, perhaps CreatorIdea/IdeaCreator? It lacks common name component like Service,
-    //  but clearly indicates responsibility according to SRP
     private final RepoIdea repoIdea;
-    private final RepoUser repoUser;
+    private final HelperUser helperUser;
 
     public Idea create(CreateIdea dto) {
-        EntityUser owner = repoUser.findById(dto.ownerId()).orElseThrow(UserNotFoundException::new);
+        EntityUser owner = helperUser.findByIdOrThrow(dto.ownerId());
+        boolean ideaAlreadyExists = repoIdea.existsByNameAndOwner(dto.name(), owner);
+        if (ideaAlreadyExists) {
+            throw new IdeaNameAlreadyExistsForUserException();
+        }
         EntityIdea idea = EntityIdea.from(dto, owner);
-        repoIdea.save(idea);
+        this.persist(idea);
         log.info("Created {}.", idea);
         return idea.toDto();
+    }
+
+    private void persist(EntityIdea idea) {
+        try {
+            repoIdea.save(idea);
+        } catch (Exception e) {
+            // general exception, I think parsing errors might be senseless, I will use fail-fast approach
+            // to check data myself before  persisting
+            log.error(idea.producePersistenceErrorMessage());
+            throw new IdeaNotPersistedException();
+        }
     }
 }

@@ -32,11 +32,16 @@ public class HelperEntityUser {
         return user;
     }
 
-    public void clearTable() {
-        repoUser.deleteAll();
-    }
-
     public User getLastPersisted() {
         return users.get(counter - 1);
+    }
+
+    public void reinitialize() {
+        repoUser.deleteAll();
+        this.users.clear();
+    }
+
+    EntityUser getById(Long id) {
+        return repoUser.findById(id).orElseThrow();
     }
 }

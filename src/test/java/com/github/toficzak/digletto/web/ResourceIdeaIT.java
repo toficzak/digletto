@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ResourceViewIdeaTest {
+class ResourceIdeaIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,9 +46,9 @@ class ResourceViewIdeaTest {
 
     @BeforeEach
     void initialize() {
-        helperEntityIdea.clearTable();
-        helperEntityUser.clearTable();
-        helperEntityRating.clearTable();
+        helperEntityIdea.reinitialize();
+        helperEntityUser.reinitialize();
+        helperEntityRating.reinitialize();
     }
 
     @Test
@@ -150,6 +150,30 @@ class ResourceViewIdeaTest {
     }
 
     @Test
+    void create_nameAlreadyExistsForUser_shouldThrow409() {
+        helperEntityUser.persistTestUser();
+        User user = helperEntityUser.getLastPersisted();
+
+        helperEntityIdea.persistTestIdea(user.id());
+        Idea idea = helperEntityIdea.getLastPersisted();
+
+        CreateIdea dto = new CreateIdea(idea.name(), user.id());
+        String jsonContent = parseJsonToString(dto);
+
+        try {
+            mockMvc
+                    .perform(post("/ideas")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonContent))
+                    .andDo(print())
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("errorCode").value(ErrorCodes.IDEA_NAME_ALREADY_USED_FOR_THIS_USER));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
     void delete_shouldDeleteIdea() {
 
         helperEntityIdea.persistTestIdea();
@@ -176,9 +200,7 @@ class ResourceViewIdeaTest {
         } catch (Exception e) {
             fail(e);
         }
-
     }
-
 
     private String parseJsonToString(CreateIdea dto) {
         try {

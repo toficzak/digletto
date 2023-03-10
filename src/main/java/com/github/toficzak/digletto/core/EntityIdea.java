@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(access = AccessLevel.PACKAGE)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "owner_id"}))
 class EntityIdea extends EntityBase {
 
     @NotNull
@@ -63,5 +64,9 @@ class EntityIdea extends EntityBase {
                 "name='" + name + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    String producePersistenceErrorMessage() {
+        return String.format("Error while persisting idea{name=%s, owner=%s}", this.name, this.owner.toString());
     }
 }
