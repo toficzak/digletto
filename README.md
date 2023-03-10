@@ -36,7 +36,7 @@ I would like to have packages:
 <details>
   <summary> [ ] Idea crud</summary>
 
-- [ ] create
+- [x] create
 - creates new idea and persists it in database
 - requires name and owning user id
 - names unique per user
