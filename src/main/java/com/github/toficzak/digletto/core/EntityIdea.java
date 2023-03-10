@@ -4,8 +4,10 @@ import com.github.toficzak.digletto.EntityBase;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
 import com.github.toficzak.digletto.core.dto.Rating;
+import com.github.toficzak.digletto.core.enums.StatusIdea;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(access = AccessLevel.PACKAGE)
 class EntityIdea extends EntityBase {
 
     @NotNull

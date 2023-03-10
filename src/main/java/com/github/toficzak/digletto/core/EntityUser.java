@@ -5,6 +5,7 @@ import com.github.toficzak.digletto.core.dto.User;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class EntityUser extends EntityBase {
+@Builder(access = AccessLevel.PACKAGE)
+class EntityUser extends EntityBase {
 
     @Email
     @NotNull

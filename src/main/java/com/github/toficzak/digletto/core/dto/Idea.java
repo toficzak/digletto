@@ -1,6 +1,6 @@
 package com.github.toficzak.digletto.core.dto;
 
-import com.github.toficzak.digletto.core.StatusIdea;
+import com.github.toficzak.digletto.core.enums.StatusIdea;
 
 import java.time.OffsetDateTime;
 import java.util.Set;

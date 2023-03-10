@@ -1,7 +1,7 @@
 package com.github.toficzak.digletto.web.view;
 
-import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.core.enums.StatusIdea;
 
 import java.time.OffsetDateTime;
 import java.util.Comparator;

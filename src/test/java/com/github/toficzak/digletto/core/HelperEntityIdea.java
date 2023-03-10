@@ -1,6 +1,7 @@
 package com.github.toficzak.digletto.core;
 
 import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.core.enums.StatusIdea;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

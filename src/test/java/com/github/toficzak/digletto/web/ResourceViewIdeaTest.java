@@ -6,10 +6,10 @@ import com.github.toficzak.digletto.config.ErrorCodes;
 import com.github.toficzak.digletto.core.HelperEntityIdea;
 import com.github.toficzak.digletto.core.HelperEntityRating;
 import com.github.toficzak.digletto.core.HelperEntityUser;
-import com.github.toficzak.digletto.core.StatusIdea;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
 import com.github.toficzak.digletto.core.dto.User;
+import com.github.toficzak.digletto.core.enums.StatusIdea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ResourceViewIdeaTest {
+class ResourceViewIdeaTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +52,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void get_shouldGetIdea() {
+    void get_shouldGetIdea() {
         helperEntityIdea.persistTestIdeaWithRatings();
         Idea idea = helperEntityIdea.getLastPersisted();
 
@@ -76,7 +76,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void get_ideaNotFound_throwException() {
+    void get_ideaNotFound_throwException() {
         try {
             mockMvc
                     .perform(get("/ideas/" + 99))
@@ -88,7 +88,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void listing_shouldGetIdeas() {
+    void listing_shouldGetIdeas() {
         helperEntityIdea.persistAnotherTestIdea();
         helperEntityIdea.persistTestIdea();
         Idea otherIdea = helperEntityIdea.getLastPersisted();
@@ -123,7 +123,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void create_shouldSucceedCreatingIdea() {
+    void create_shouldSucceedCreatingIdea() {
         helperEntityUser.persistTestUser();
         User user = helperEntityUser.getLastPersisted();
         CreateIdea dto = new CreateIdea(OTHER_IDEA_NAME, user.id());
@@ -150,7 +150,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void delete_shouldDeleteIdea() {
+    void delete_shouldDeleteIdea() {
 
         helperEntityIdea.persistTestIdea();
         Idea idea = helperEntityIdea.getLastPersisted();
@@ -165,7 +165,7 @@ public class ResourceViewIdeaTest {
     }
 
     @Test
-    public void delete_ideaNotFound_throwException() {
+    void delete_ideaNotFound_throwException() {
 
         try {
             mockMvc
