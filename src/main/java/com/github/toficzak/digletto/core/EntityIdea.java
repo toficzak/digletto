@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,10 +31,15 @@ class EntityIdea extends EntityBase {
     @OneToMany
     private Set<EntityUser> users;
     @NotNull
+    private OffsetDateTime lastActivityDate;
+    private String description;
+    @NotNull
     @Enumerated(EnumType.STRING)
     private StatusIdea status;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<EntityRating> ratings = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<EntityUser> involvedUsers;
 
     static EntityIdea from(CreateIdea dto, EntityUser user) {
         return EntityIdea.builder()
