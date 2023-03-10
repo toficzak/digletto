@@ -1,0 +1,361 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1678482942410-1
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_rating_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: score
+                  type: INTEGER
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: entity_rating
+  - changeSet:
+      id: 1678482942410-2
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: last_activity_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: owner_id
+                  type: BIGINT
+            tableName: entity_idea
+  - changeSet:
+      id: 1678482942410-3
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_involved_users_pkey
+                  name: entity_idea_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_involved_users_pkey
+                  name: involved_users_id
+                  type: BIGINT
+            tableName: entity_idea_involved_users
+  - changeSet:
+      id: 1678482942410-4
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_ratings_pkey
+                  name: entity_idea_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_ratings_pkey
+                  name: ratings_id
+                  type: BIGINT
+            tableName: entity_idea_ratings
+  - changeSet:
+      id: 1678482942410-5
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_users_pkey
+                  name: entity_idea_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_idea_users_pkey
+                  name: users_id
+                  type: BIGINT
+            tableName: entity_idea_users
+  - changeSet:
+      id: 1678482942410-6
+      author: krzysztof (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name, owner_id
+            constraintName: uk9vmlwha6i7jt0w4n71nxrhne
+            tableName: entity_idea
+  - changeSet:
+      id: 1678482942410-7
+      author: krzysztof (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: involved_users_id
+            constraintName: uk_1l1ihr8bxqg81co3catjje9ro
+            tableName: entity_idea_involved_users
+  - changeSet:
+      id: 1678482942410-8
+      author: krzysztof (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: ratings_id
+            constraintName: uk_felb1psgrlv5ucay8sg49dg6b
+            tableName: entity_idea_ratings
+  - changeSet:
+      id: 1678482942410-9
+      author: krzysztof (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: users_id
+            constraintName: uk_hdfave9fdl4pknupkgp1m2sgi
+            tableName: entity_idea_users
+  - changeSet:
+      id: 1678482942410-10
+      author: krzysztof (generated)
+      changes:
+        - createSequence:
+            cacheSize: 1
+            cycle: false
+            dataType: bigint
+            incrementBy: 50
+            maxValue: 9223372036854775807
+            minValue: 1
+            sequenceName: entity_idea_seq
+            startValue: 1
+  - changeSet:
+      id: 1678482942410-11
+      author: krzysztof (generated)
+      changes:
+        - createSequence:
+            cacheSize: 1
+            cycle: false
+            dataType: bigint
+            incrementBy: 50
+            maxValue: 9223372036854775807
+            minValue: 1
+            sequenceName: entity_rating_seq
+            startValue: 1
+  - changeSet:
+      id: 1678482942410-12
+      author: krzysztof (generated)
+      changes:
+        - createSequence:
+            cacheSize: 1
+            cycle: false
+            dataType: bigint
+            incrementBy: 50
+            maxValue: 9223372036854775807
+            minValue: 1
+            sequenceName: entity_user_seq
+            startValue: 1
+  - changeSet:
+      id: 1678482942410-13
+      author: krzysztof (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: entity_user_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+            tableName: entity_user
+  - changeSet:
+      id: 1678482942410-15
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: involved_users_id
+            baseTableName: entity_idea_involved_users
+            constraintName: fk165nsuyjcg98ar35qxdc85tsw
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_user
+            validate: true
+  - changeSet:
+      id: 1678482942410-16
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: entity_idea_id
+            baseTableName: entity_idea_users
+            constraintName: fk2x9j7f9fx3ci69hfi363hsx34
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_idea
+            validate: true
+  - changeSet:
+      id: 1678482942410-17
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: users_id
+            baseTableName: entity_idea_users
+            constraintName: fkaim4gipjetbhng5qtq959rdj2
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_user
+            validate: true
+  - changeSet:
+      id: 1678482942410-18
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: entity_rating
+            constraintName: fkbvg2js1or92t5bhuava0inf6v
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_user
+            validate: true
+  - changeSet:
+      id: 1678482942410-19
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: ratings_id
+            baseTableName: entity_idea_ratings
+            constraintName: fkhecbjks0lg5xl5ikltnqsx07f
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_rating
+            validate: true
+  - changeSet:
+      id: 1678482942410-20
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: entity_idea_id
+            baseTableName: entity_idea_involved_users
+            constraintName: fkp8jc8e622oqet4ehd5y0qss7j
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_idea
+            validate: true
+  - changeSet:
+      id: 1678482942410-21
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: entity_idea_id
+            baseTableName: entity_idea_ratings
+            constraintName: fkraucc1rrrma313bienjor8gxx
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_idea
+            validate: true
+  - changeSet:
+      id: 1678482942410-22
+      author: krzysztof (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: owner_id
+            baseTableName: entity_idea
+            constraintName: fksyhtekxxupk2j3692c9nfhf88
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: entity_user
+            validate: true
+  - changeSet:
+      id: 1678482942410-23
+      author: krzysztof (generated)
+      changes:
+        - createView:
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            replaceIfExists: true
+            selectQuery: select i.id, i.created, i.name, i.status, u.name as username, cast(avg(r.score) as Float) as avg_score  from entity_idea i left join entity_user u on i.owner_id = u.id left join entity_idea_ratings ir on ir.entity_idea_id = i.id left join entity_rating r on r.id = ir.ratings_id group by i.id, u.name
+            viewName: v_idea_listing

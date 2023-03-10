@@ -6,7 +6,9 @@ import com.github.toficzak.digletto.core.ServiceIdeaView;
 import com.github.toficzak.digletto.core.dto.CreateIdea;
 import com.github.toficzak.digletto.core.dto.DeleteIdea;
 import com.github.toficzak.digletto.core.dto.Idea;
+import com.github.toficzak.digletto.core.dto.IdeaListing;
 import com.github.toficzak.digletto.web.view.ViewIdea;
+import com.github.toficzak.digletto.web.view.ViewIdeaListing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +27,9 @@ public class ResourceIdea {
     private final ServiceIdeaDelete serviceIdeaDelete;
 
     @GetMapping
-    public Page<ViewIdea> listing(Pageable pageable) {
-        Page<Idea> ideas = serviceIdeaView.listing(pageable);
-        return ideas.map(ViewIdea::new);
+    public Page<ViewIdeaListing> listing(Pageable pageable) {
+        Page<IdeaListing> ideas = serviceIdeaView.listing(pageable);
+        return ideas.map(ViewIdeaListing::new);
     }
 
     @GetMapping("/{ideaId}")
@@ -35,7 +37,6 @@ public class ResourceIdea {
         Idea idea = serviceIdeaView.get(ideaId);
         return new ViewIdea(idea);
     }
-
 
     @PostMapping
     public ResponseEntity<ViewIdea> create(@RequestBody CreateIdea dto) {

@@ -30,7 +30,6 @@ class EntityIdea extends EntityBase {
     private EntityUser owner;
     @OneToMany
     private Set<EntityUser> users;
-    @NotNull
     private OffsetDateTime lastActivityDate;
     private String description;
     @NotNull

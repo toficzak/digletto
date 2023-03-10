@@ -22,6 +22,7 @@ import java.time.OffsetDateTime;
 
 import static com.github.toficzak.digletto.core.HelperEntityIdea.OTHER_IDEA_NAME;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -89,7 +90,7 @@ class ResourceIdeaIT {
 
     @Test
     void listing_shouldGetIdeas() {
-        helperEntityIdea.persistAnotherTestIdea();
+        helperEntityIdea.persistTestIdeaWithRatings();
         helperEntityIdea.persistTestIdea();
         Idea otherIdea = helperEntityIdea.getLastPersisted();
         Idea idea = helperEntityIdea.get(0);
@@ -104,15 +105,15 @@ class ResourceIdeaIT {
                     .andExpect(jsonPath("$.content[0].id").value(idea.id()))
                     .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 1)))
                     .andExpect(jsonPath("$.content[0].name").value(idea.name()))
-                    .andExpect(jsonPath("$.content[0].owner.email").value(idea.owner().email()))
-                    .andExpect(jsonPath("$.content[0].owner.name").value(idea.owner().name()))
+                    .andExpect(jsonPath("$.content[0].username").value(idea.owner().name()))
                     .andExpect(jsonPath("$.content[0].status").value(idea.status().toString()))
+                    .andExpect(jsonPath("$.content[0].avgScore").value(1.5))
                     .andExpect(jsonPath("$.content[1].id").value(otherIdea.id()))
                     .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 1)))
                     .andExpect(jsonPath("$.content[1].name").value(otherIdea.name()))
-                    .andExpect(jsonPath("$.content[1].owner.email").value(otherIdea.owner().email()))
-                    .andExpect(jsonPath("$.content[1].owner.name").value(otherIdea.owner().name()))
+                    .andExpect(jsonPath("$.content[1].username").value(otherIdea.owner().name()))
                     .andExpect(jsonPath("$.content[1].status").value(otherIdea.status().toString()))
+                    .andExpect(jsonPath("$.content[1].avgScore").value(nullValue()))
                     .andExpect(jsonPath("$.pageable.pageSize").value(20))
                     .andExpect(jsonPath("$.pageable.pageNumber").value(0))
                     .andExpect(jsonPath("$.totalPages").value(1))
@@ -203,7 +204,7 @@ class ResourceIdeaIT {
             fail(e);
         }
     }
-    
+
     @Test
     void delete_ideaNotFound_throwException() {
 
