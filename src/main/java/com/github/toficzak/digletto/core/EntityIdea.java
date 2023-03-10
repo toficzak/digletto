@@ -61,12 +61,17 @@ class EntityIdea extends EntityBase {
     @Override
     public String toString() {
         return "EntityIdea{" +
+                "id=" + id + '\'' +
                 "name='" + name + '\'' +
-                ", id=" + id +
+                "status='" + status + '\'' +
                 '}';
     }
 
     String producePersistenceErrorMessage() {
         return String.format("Error while persisting idea{name=%s, owner=%s}", this.name, this.owner.toString());
+    }
+
+    boolean canBeDeleted() {
+        return StatusIdea.DRAFT == this.status;
     }
 }

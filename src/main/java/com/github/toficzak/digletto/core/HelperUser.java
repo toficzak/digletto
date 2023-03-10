@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class HelperUser {
+class HelperUser {
 
     private final RepoUser repoUser;
 

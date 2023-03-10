@@ -189,6 +189,22 @@ class ResourceIdeaIT {
     }
 
     @Test
+    void delete_ideaNotDraft_shouldThrowException() {
+
+        helperEntityIdea.persistTestIdea(StatusIdea.PUBLISHED);
+        Idea idea = helperEntityIdea.getLastPersisted();
+        try {
+            mockMvc
+                    .perform(delete("/ideas" + "/" + idea.id()))
+                    .andDo(print())
+                    .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("errorCode").value(ErrorCodes.IDEA_CANNOT_BE_DELETED));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+    
+    @Test
     void delete_ideaNotFound_throwException() {
 
         try {

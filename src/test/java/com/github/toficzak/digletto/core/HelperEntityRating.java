@@ -5,16 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class HelperEntityRating {
     @Autowired
     private final RepoRating repoRating;
-    public Map<Integer, Rating> ratings = new Hashtable<>();
-    public int counter = 0;
+    public List<Rating> ratings = new ArrayList<>();
 
     public EntityRating persistTestRating(Integer value, EntityUser user) {
         EntityRating rating = EntityRating.builder()
@@ -24,7 +23,7 @@ public class HelperEntityRating {
 
         repoRating.save(rating);
         Rating dto = rating.toDto();
-        ratings.put(counter++, dto);
+        ratings.add(dto);
         return rating;
     }
 

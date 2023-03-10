@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,14 +19,18 @@ public class HelperEntityIdea {
     private final HelperEntityUser helperEntityUser;
     @Autowired
     private final HelperEntityRating helperEntityRating;
-    public Map<Integer, Idea> ideas = new Hashtable<>();
-    public int counter = 0;
+    public List<Idea> ideas = new ArrayList<>();
     @Autowired
     private RepoIdea repoIdea;
 
     public void persistTestIdea() {
         EntityUser owner = helperEntityUser.persistTestUser();
         this.persistTestIdea(owner);
+    }
+
+    public void persistTestIdea(StatusIdea status) {
+        EntityUser owner = helperEntityUser.persistTestUser();
+        this.persistTestIdeaWithRatings(owner, status);
     }
 
     public void persistTestIdea(Long ownerId) {
@@ -43,16 +47,19 @@ public class HelperEntityIdea {
 
         repoIdea.saveAndFlush(idea);
         Idea dto = idea.toDto();
-        ideas.put(counter++, dto);
+        ideas.add(dto);
     }
 
     public void persistTestIdeaWithRatings() {
         EntityUser owner = helperEntityUser.persistTestUser();
+        this.persistTestIdeaWithRatings(owner, StatusIdea.DRAFT);
+    }
 
+    public void persistTestIdeaWithRatings(EntityUser owner, StatusIdea status) {
         EntityIdea idea = EntityIdea.builder()
                 .name(IDEA_NAME)
                 .owner(owner)
-                .status(StatusIdea.DRAFT)
+                .status(status)
                 .build();
 
         EntityRating rating1 = helperEntityRating.persistTestRating(1, owner);
@@ -63,9 +70,8 @@ public class HelperEntityIdea {
         repoIdea.saveAndFlush(idea);
 
         Idea dto = idea.toDto();
-        ideas.put(counter++, dto);
+        ideas.add(dto);
     }
-
 
     public void persistAnotherTestIdea() {
         EntityUser owner = helperEntityUser.persistTestUser();
@@ -77,11 +83,11 @@ public class HelperEntityIdea {
 
         repoIdea.saveAndFlush(idea);
         Idea dto = idea.toDto();
-        ideas.put(counter++, dto);
+        ideas.add(dto);
     }
 
     public Idea getLastPersisted() {
-        return ideas.get(counter - 1);
+        return ideas.get(ideas.size() - 1);
     }
 
     public Idea get(int index) {

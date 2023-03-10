@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -17,8 +17,7 @@ public class HelperEntityUser {
     @Autowired
     private final RepoUser repoUser;
 
-    public Map<Integer, User> users = new Hashtable<>();
-    public int counter = 0;
+    public List<User> users = new ArrayList<>();
 
     public EntityUser persistTestUser() {
         EntityUser user = EntityUser.builder()
@@ -28,12 +27,12 @@ public class HelperEntityUser {
 
         repoUser.saveAndFlush(user);
         User dto = user.toDto();
-        users.put(counter++, dto);
+        users.add(dto);
         return user;
     }
 
     public User getLastPersisted() {
-        return users.get(counter - 1);
+        return users.get(users.size() - 1);
     }
 
     public void reinitialize() {

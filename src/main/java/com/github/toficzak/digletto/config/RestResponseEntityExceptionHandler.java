@@ -1,9 +1,6 @@
 package com.github.toficzak.digletto.config;
 
-import com.github.toficzak.digletto.core.exception.IdeaNameAlreadyExistsForUserException;
-import com.github.toficzak.digletto.core.exception.IdeaNotFoundException;
-import com.github.toficzak.digletto.core.exception.IdeaNotPersistedException;
-import com.github.toficzak.digletto.core.exception.UserNotFoundException;
+import com.github.toficzak.digletto.core.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +34,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleIdeaNameAlreadyExistsForUser(IdeaNameAlreadyExistsForUserException exception, WebRequest request) {
         Error error = new Error(ErrorCodes.IDEA_NAME_ALREADY_USED_FOR_THIS_USER);
         return handleExceptionInternal(exception, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(IdeaCannotBeDeletedException.class)
+    public ResponseEntity<Object> handleIdeaCannotBeDeletedException(IdeaCannotBeDeletedException exception, WebRequest request) {
+        Error error = new Error(ErrorCodes.IDEA_CANNOT_BE_DELETED);
+        return handleExceptionInternal(exception, error, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 }
