@@ -6,8 +6,6 @@ import com.github.toficzak.digletto.core.exception.IdeaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +15,7 @@ public class ServiceIdeaView {
     private final RepoIdea repoIdea;
     private final RepoVIdeaListing repoVIdeaListing;
 
-    public Page<IdeaListing> listing(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<IdeaListing> listing(Pageable pageable) {
         return repoVIdeaListing.findAll(pageable).map(EntityVIdeaListing::toDto);
     }
 

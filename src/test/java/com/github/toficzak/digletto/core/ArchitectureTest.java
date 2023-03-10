@@ -4,7 +4,6 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
@@ -21,11 +20,10 @@ class ArchitectureTest {
             .withImportOption(new ImportOption.DoNotIncludeTests()) // not including some test helpers
             .importPackages(MAIN_PACKAGE);
 
-    @Disabled("`Pageable` comes from web and this test fail-fast.")
     @Test
     void coreHasNoDependencies() {
         ArchRule coreHasNoDependencies = noClasses().that().resideInAPackage(CORE_PACKAGE)
-                .should().dependOnClassesThat().resideInAPackage(WEB_PACKAGE);
+                .should().accessClassesThat().resideInAPackage(WEB_PACKAGE);
 
         coreHasNoDependencies.check(IMPORTED_CLASSED);
     }

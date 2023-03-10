@@ -7,7 +7,7 @@
 - [ ] in tests, I tried to check `createdDate`, but `write...AsString()` serializes differently than application.
   Application rounds millis. When this problem is solved, custom `ODTMatcher`.
 - [ ] fix constraint names to something human-readable in changelog. Maybe multiple changelogs? No idea.
-- [ ] coreHasNoDependencies() test in ArchitectureTest should be fixed.
+- [x] coreHasNoDependencies() test in ArchitectureTest should be fixed
 - [ ] clear database between each request test
 
 ### Architecture

@@ -12,6 +12,8 @@ import com.github.toficzak.digletto.web.view.ViewIdeaListing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,7 @@ public class ResourceIdea {
     private final ServiceIdeaDelete serviceIdeaDelete;
 
     @GetMapping
-    public Page<ViewIdeaListing> listing(Pageable pageable) {
+    public Page<ViewIdeaListing> listing(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<IdeaListing> ideas = serviceIdeaView.listing(pageable);
         return ideas.map(ViewIdeaListing::new);
     }

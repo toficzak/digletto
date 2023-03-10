@@ -92,8 +92,8 @@ class ResourceIdeaIT {
     void listing_shouldGetIdeas() {
         helperEntityIdea.persistTestIdeaWithRatings();
         helperEntityIdea.persistTestIdea();
-        Idea otherIdea = helperEntityIdea.getLastPersisted();
         Idea idea = helperEntityIdea.get(0);
+        Idea idea2 = helperEntityIdea.getLastPersisted();
 
         try {
             mockMvc
@@ -102,19 +102,19 @@ class ResourceIdeaIT {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.content").isArray())
                     .andExpect(jsonPath("$.content", hasSize(2)))
-                    .andExpect(jsonPath("$.content[0].id").value(idea.id()))
-                    .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea.created(), 1)))
-                    .andExpect(jsonPath("$.content[0].name").value(idea.name()))
-                    .andExpect(jsonPath("$.content[0].username").value(idea.owner().name()))
-                    .andExpect(jsonPath("$.content[0].status").value(idea.status().toString()))
-                    .andExpect(jsonPath("$.content[0].avgScore").value(1.5))
-                    .andExpect(jsonPath("$.content[1].id").value(otherIdea.id()))
-                    .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(otherIdea.created(), 1)))
-                    .andExpect(jsonPath("$.content[1].name").value(otherIdea.name()))
-                    .andExpect(jsonPath("$.content[1].username").value(otherIdea.owner().name()))
-                    .andExpect(jsonPath("$.content[1].status").value(otherIdea.status().toString()))
-                    .andExpect(jsonPath("$.content[1].avgScore").value(nullValue()))
-                    .andExpect(jsonPath("$.pageable.pageSize").value(20))
+                    .andExpect(jsonPath("$.content[0].id").value(idea2.id()))
+                    .andExpect(jsonPath("$.content[0].created").value(new ODTMatcher(idea2.created(), 1)))
+                    .andExpect(jsonPath("$.content[0].name").value(idea2.name()))
+                    .andExpect(jsonPath("$.content[0].username").value(idea2.owner().name()))
+                    .andExpect(jsonPath("$.content[0].status").value(idea2.status().toString()))
+                    .andExpect(jsonPath("$.content[0].avgScore").value(nullValue()))
+                    .andExpect(jsonPath("$.content[1].id").value(idea.id()))
+                    .andExpect(jsonPath("$.content[1].created").value(new ODTMatcher(idea.created(), 1)))
+                    .andExpect(jsonPath("$.content[1].name").value(idea.name()))
+                    .andExpect(jsonPath("$.content[1].username").value(idea.owner().name()))
+                    .andExpect(jsonPath("$.content[1].status").value(idea.status().toString()))
+                    .andExpect(jsonPath("$.content[1].avgScore").value(1.5))
+                    .andExpect(jsonPath("$.pageable.pageSize").value(10))
                     .andExpect(jsonPath("$.pageable.pageNumber").value(0))
                     .andExpect(jsonPath("$.totalPages").value(1))
                     .andExpect(jsonPath("$.totalElements").value(2));
