@@ -80,7 +80,7 @@ I would like to have packages:
 
 ---
 
-- [ ] delete
+- [x] delete
 - deletes idea
 - if idea does not exist, throw 404
 - only in status DRAFT - otherwise throw 403
